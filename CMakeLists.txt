@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.31)
-project(CVPuzzleSolver)
+project(CVPuzzleSolver LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(CVPuzzleSolver main.cpp)
+add_subdirectory(third_party/stb)
+add_subdirectory(libs/base)
+add_subdirectory(libs/images)
+add_subdirectory(src)
