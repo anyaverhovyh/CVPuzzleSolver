@@ -10,6 +10,7 @@ target_link_libraries(libimages PUBLIC libbase PRIVATE third_party_stb)
 if (BUILD_TESTING)
     add_executable(libimages_tests
             libimages/debug_io_tests.cpp
+            libimages/tests_utils.cpp
     )
     target_link_libraries(libimages_tests PRIVATE libimages GTest::gtest_main)
     add_test(NAME libimages_tests COMMAND libimages_tests)
