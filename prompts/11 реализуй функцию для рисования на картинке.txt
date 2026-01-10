@@ -1,0 +1,10 @@
+реализуй файлы color.h color.cpp предствляющие цвет, цвет может быть черно-белым или 3-канальным цветным
+типы - float и uint8_t
+сделай по аналогии с image.h и image.cpp
+
+реализуй файлы draw.h draw.cpp и draw_tests.cpp (gtest юнит-тесты)
+нужна функция
+void drawPoint(Image<T> &image, point2i pixel, color c);
+void drawPoints(Image<T> &image, const std::vector<point2i> &pixels, color c);
+
+прилагаю image.h, image.cpp

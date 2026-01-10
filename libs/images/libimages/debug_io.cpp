@@ -26,15 +26,17 @@ void ensure_dir_exists_for_file(const std::string &filepath) {
 }
 
 image8u normalize(const image32f &img, float void_value) {
-    rassert(img.channels() == 1, "normalize expects 1-channel float image", img.channels());
+    rassert(img.channels() == 1 || img.channels() == 3, "normalize expects 1/3-channel float image", img.channels());
 
     float maxv = 0.0f;
     for (int j = 0; j < img.height(); ++j) {
         for (int i = 0; i < img.width(); ++i) {
-            float v = img(j, i);
-            if (v == void_value)
-                continue;
-            maxv = std::max(maxv, v);
+            for (int c = 0; c < img.channels(); ++c) {
+                float v = img(j, i, c);
+                if (v == void_value)
+                    continue;
+                maxv = std::max(maxv, v);
+            }
         }
     }
 
@@ -43,17 +45,22 @@ image8u normalize(const image32f &img, float void_value) {
     const float inv = 255.0f / maxv;
     for (int j = 0; j < img.height(); ++j) {
         for (int i = 0; i < img.width(); ++i) {
-            float v = img(j, i);
-            if (v == void_value) {
-                // green pixel if void value
-                out(j, i, 0) = 0;
-                out(j, i, 1) = 255;
-                out(j, i, 2) = 0;
-                continue;
+            for (int c = 0; c < img.channels(); ++c) {
+                float v = img(j, i, c);
+                if (v == void_value) {
+                    // green pixel if void value
+                    out(j, i, 0) = 0;
+                    out(j, i, 1) = 255;
+                    out(j, i, 2) = 0;
+                    continue;
+                }
+                float x = v * inv;
+                for (int c = 0; c < 3; ++c) {
+                    out(j, i, c) = (uint8_t) std::lround(x);
+                }
             }
-            float x = v * inv;
-            for (int c = 0; c < 3; ++c) {
-                out(j, i, c) = (uint8_t) std::lround(x);
+            for (int c = img.channels(); c < out.channels(); ++c) {
+                out(j, i, c) = out(j, i, c - 1);
             }
         }
     }

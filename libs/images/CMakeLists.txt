@@ -3,7 +3,9 @@ add_library(libimages STATIC
         libimages/algorithms/morphology.cpp
         libimages/algorithms/split_into_parts.cpp
         libimages/algorithms/threshold_masking.cpp
+        libimages/color.cpp
         libimages/debug_io.cpp
+        libimages/draw.cpp
         libimages/image.cpp
         libimages/image_io.cpp
 )
@@ -21,6 +23,7 @@ if (BUILD_TESTING)
             libimages/algorithms/split_into_parts_tests.cpp
             libimages/algorithms/threshold_masking_tests.cpp
             libimages/debug_io_tests.cpp
+            libimages/draw_tests.cpp
             libimages/tests_utils.cpp
     )
     target_link_libraries(libimages_tests PRIVATE libimages GTest::gtest_main)
