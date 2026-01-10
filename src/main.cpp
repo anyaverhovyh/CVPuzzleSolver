@@ -81,6 +81,29 @@ int main() {
         std::cout << objects_count << " objects extracted" << std::endl;
         rassert(objects_count == 6, 237189371298, objects_count);
 
+        // визуализируем цветами компоненты связности - один объект - один цвет
+        image32i image_with_object_indices(image.width(), image.height(), 1);
+        for (int obj = 0; obj < objects_count; ++obj) {
+            // это отступ - координата верхнего левого угла объекта на оригинальной картинке
+            point2i offset = objOffsets[obj];
+
+            // это маска объекта
+            image8u mask = objMasks[obj];
+
+            for (int j = 0; j < mask.height(); ++j) {
+                for (int i = 0; i < mask.width(); ++i) {
+                    // если объект в своей маске отмечен как "тут объект"
+                    if (mask(j, i) == 255) {
+                        // то рассчитываем координаты этого пикселя в оригинальной картинке и пишем туда наш номер (индексация с 1)
+                        int global_i = offset.x + i;
+                        int global_j = offset.y + j;
+                        image_with_object_indices(global_j, global_i) = obj + 1;
+                    }
+                }
+            }
+        }
+        debug_io::dump_image("debug/07_colorized_objects.jpg", debug_io::colorize_labels(image_with_object_indices, 0));
+
         for (int obj = 0; obj < objects_count; ++obj) {
             std::string obj_debug_dir = "debug/objects/object" + std::to_string(obj) + "/";
 
